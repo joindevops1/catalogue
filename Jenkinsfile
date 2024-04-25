@@ -1,14 +1,14 @@
 pipeline {
     agent {
-       node {
-          label 'AGENT-2'
+        node {
+            label 'AGENT-2'
         }
     }
     environment { 
-        packageversion = ''
+        packageVersion = ''
     }
     options {
-        timeout(time: 1, unit: 'HOURS') 
+        timeout(time: 1, unit: 'HOURS')
         disableConcurrentBuilds()
     }
     // parameters {
@@ -25,7 +25,7 @@ pipeline {
     // build
     stages {
         stage('Get the version') {
-           steps {
+            steps {
                 script {
                     def packageJson = readJSON file: 'package.json'
                     packageVersion = packageJson.version
@@ -41,13 +41,11 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh """
-                     echo  "Here I wrote shell script"
-                    echo "$GREETING"
+                    echo  "Here I wrote shell script"
                     #sleep 10
                 """
             }
         }
-        
     }
     // post build
     post { 
@@ -55,9 +53,9 @@ pipeline {
             echo 'I will always say Hello again!'
         }
         failure { 
-            echo 'this runs when pipeline is failed used generally to send some alerts'
+            echo 'this runs when pipeline is failed, used generally to send some alerts'
         }
-        success { 
+        success{
             echo 'I will say Hello when pipeline is success'
         }
     }
