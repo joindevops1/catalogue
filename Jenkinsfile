@@ -17,7 +17,7 @@ pipeline {
 
         // text(name: 'BIOGRAPHY', defaultValue: '', description: 'Enter some information about the person')
 
-        booleanParam(name: 'Deploy', defaultValue: flase, description: 'Toggle this value')
+        booleanParam(name: 'Deploy', defaultValue: false, description: 'Toggle this value')
 
         // choice(name: 'CHOICE', choices: ['One', 'Two', 'Three'], description: 'Pick something')
 
@@ -37,20 +37,21 @@ pipeline {
         stage('Install dependencies') {
             steps {
                 sh """
-                   npm install
-                """
-            }
-        }stage('Unit tests') {
-            steps {
-                sh """
-                    echo "unit test will run here"
+                    npm install
                 """
             }
         }
-        stage('Sonar Scan') {
+        stage('Unit tests') {
             steps {
                 sh """
-                   sonar-scanner
+                    echo "unit tests will run here"
+                """
+            }
+        }
+        stage('Sonar Scan'){
+            steps{
+                sh """
+                    sonar-scanner
                 """
             }
         }
@@ -60,7 +61,6 @@ pipeline {
                     ls -la
                     zip -q -r catalogue.zip ./* -x ".git" -x "*.zip"
                     ls -ltr
-
                 """
             }
         }
@@ -86,7 +86,7 @@ pipeline {
         stage('Deploy') {
             when {
                 expression{
-                    params.Deploy == true
+                    params.Deploy == 'true'
                 }
             }
             steps {
@@ -96,9 +96,7 @@ pipeline {
                             string(name: 'environment', value: "dev")
                         ]
                         build job: "catalogue-deploy", wait: true, parameters: params
-
                     }
-                    
             }
         }
     }
@@ -106,7 +104,7 @@ pipeline {
     post { 
         always { 
             echo 'I will always say Hello again!'
-            // deleteDir()
+            deleteDir()
         }
         failure { 
             echo 'this runs when pipeline is failed, used generally to send some alerts'
