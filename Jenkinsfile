@@ -40,6 +40,19 @@ pipeline {
                    npm install
                 """
             }
+        }stage('Unit tests') {
+            steps {
+                sh """
+                    echo "unit test will run here"
+                """
+            }
+        }
+        stage('Sonar Scan') {
+            steps {
+                sh """
+                   sonar-scanner
+                """
+            }
         }
         stage('Build') {
             steps {
